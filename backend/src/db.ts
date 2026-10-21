@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, types } from 'pg';
 import { config } from './config';
 
 export const pool = new Pool({
@@ -6,7 +6,10 @@ export const pool = new Pool({
     ssl: config.pgssl ? { rejectUnauthorized: false } : undefined,
 });
 
+types.setTypeParser(1082, (value) => value);
+
 export const query = <T extends Record<string, unknown>>(
     text: string,
     params?: unknown[]
 ) => pool.query<T>(text, params);
+
